@@ -47,7 +47,7 @@ class TodoController extends Controller
         $todo->text = $request->text;
         $todo->done = 0;
         $todo->save();
-        return redirect()->to('api/todos');
+        return $todo;
     }
 
     /**
@@ -80,7 +80,14 @@ class TodoController extends Controller
     public function delete($id)
     {
         // TODO
-        $todo = Todo::FindOrFail($id);
-        $todo->delete();
+        $response = 0;
+        try{
+            $todo = Todo::FindOrFail($id);
+            $todo->delete();
+            $response = 200;
+        }catch(ModelNotFoundException $exception){
+            $response = 400;
+        }
+        return $response;
     }
 }
