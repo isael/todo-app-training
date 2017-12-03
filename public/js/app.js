@@ -29773,6 +29773,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /**
  * Tips:
@@ -29794,21 +29796,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('api/todos').then(function (response) {
             _this.items = response.data;
         });
-        /*this.items = [
-            { text: 'Primerisimo recordatorio', done: true },
-            { text: 'Segundo recordatorio', done: false },
-            { text: 'Tercero recordatorio', done: false },
-            { text: 'Cuarto recordatorio', done: true },
-            { text: 'Quinto recordatorio', done: false },
-        ]*/
+        //pendiente
     },
 
     methods: {
         addTodo: function addTodo() {
+            var _this2 = this;
+
             var text = this.todoItemText.trim();
             if (text !== '') {
-                this.items.push({ text: text, done: false });
-                this.todoItemText = '';
+                //guarda en base
+                axios.post('api/todos', {
+                    text: this.todoItemText
+                }).then(function (response) {
+                    _this2.items.unshift({ text: text, done: false }); //agregamos al principio de la lista
+                    _this2.todoItemText = '';
+                }).catch(function (error) {
+                    alert(error.response.data);
+                });
             }
         },
         removeTodo: function removeTodo(todo) {
@@ -29831,41 +29836,67 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "box" }, [
-      _c("div", { staticClass: "field is-grouped" }, [
-        _c("p", { staticClass: "control is-expanded" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.todoItemText,
-                expression: "todoItemText"
-              }
-            ],
-            staticClass: "input",
-            attrs: { type: "text", placeholder: "Nuevo recordatorio" },
-            domProps: { value: _vm.todoItemText },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+    _c(
+      "form",
+      {
+        attrs: { method: "POST" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.addTodo($event)
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "box" }, [
+          _c("div", { staticClass: "field is-grouped" }, [
+            _c("p", { staticClass: "control is-expanded" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.todoItemText,
+                    expression: "todoItemText"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "text", placeholder: "Nuevo recordatorio" },
+                domProps: { value: _vm.todoItemText },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.todoItemText = $event.target.value
+                  }
                 }
-                _vm.todoItemText = $event.target.value
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("p", { staticClass: "control" }, [
-          _c(
-            "a",
-            { staticClass: "button is-info", on: { click: _vm.addTodo } },
-            [_vm._v("\n                    Agregar\n                ")]
-          )
+              })
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "control" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "button is-info",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.addTodo($event)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        Agregar\n                    "
+                  )
+                ]
+              )
+            ])
+          ])
         ])
-      ])
-    ]),
+      ]
+    ),
     _vm._v(" "),
     _c(
       "table",

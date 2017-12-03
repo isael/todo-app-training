@@ -1,17 +1,19 @@
 <template>
     <div class="container">
-        <div class="box">
-            <div class="field is-grouped">
-                <p class="control is-expanded">
-                    <input class="input" type="text" placeholder="Nuevo recordatorio" v-model="todoItemText">
-                </p>
-                <p class="control">
-                    <a class="button is-info" @click="addTodo">
-                        Agregar
-                    </a>
-                </p>
+        <form method= "POST" v-on:submit.prevent="addTodo">
+            <div class="box">
+                <div class="field is-grouped">
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Nuevo recordatorio" v-model="todoItemText">
+                    </p>
+                    <p class="control">
+                        <a class="button is-info" @click.prevent="addTodo">
+                            Agregar
+                        </a>
+                    </p>
+                </div>
             </div>
-        </div>
+        </form>
         <table class="table is-bordered">
             <tr v-for="(todo, index) in items" :key="index">
                 <td class="is-fullwidth" style="cursor: pointer" :class="{ 'is-done': todo.done }" @click="toggleDone(todo)">
@@ -41,21 +43,25 @@
             }
         },
         mounted () {
-            axios.get('api/todos').then(response => {this.items = response.data});
-            /*this.items = [
-                { text: 'Primerisimo recordatorio', done: true },
-                { text: 'Segundo recordatorio', done: false },
-                { text: 'Tercero recordatorio', done: false },
-                { text: 'Cuarto recordatorio', done: true },
-                { text: 'Quinto recordatorio', done: false },
-            ]*/
+            axios.get('api/todos').then(response => {
+                this.items = response.data
+            });
+            //pendiente
         },
         methods: {
             addTodo () {
                 let text = this.todoItemText.trim()
                 if (text !== '') {
-                    this.items.push({ text: text, done: false })
-                    this.todoItemText = ''
+                    //guarda en base
+                    axios.post('api/todos',{
+                        text: this.todoItemText
+                    }).then(response => {    
+                        //agregamos al principio de la lista en la vista                    
+                        this.items.unshift({ text: text, done: false });
+                        this.todoItemText = '';
+                    }).catch(error => {
+                        alert(error.response.data)
+                    });
                 }
             },
             removeTodo (todo) {

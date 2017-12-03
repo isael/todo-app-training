@@ -23,8 +23,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        // TODO
-        $todos = Todo::get();
+        // Va por la lista de pendientes
+        $todos = Todo::orderBy('created_at','DESC')->get();
         return $todos;
     }
 
@@ -38,7 +38,16 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO
+        // Valida que no sea vacio el pendiente
+        $this->validate($request,[
+            'text' => 'required'
+        ]);
+        //
+        $todo = new Todo;
+        $todo->text = $request->text;
+        $todo->done = 0;
+        $todo->save();
+        return redirect()->to('api/todos');
     }
 
     /**
