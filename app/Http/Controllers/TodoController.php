@@ -80,13 +80,13 @@ class TodoController extends Controller
     public function delete($id)
     {
         // TODO
-        $response = 0;
+        $response = "";
         try{
             $todo = Todo::FindOrFail($id);
             $todo->delete();
-            $response = 200;
+            $response = "{'response' : 200}";
         }catch(ModelNotFoundException $exception){
-            $response = 400;
+            $response = "{'response' : 400}";
         }
         return $response;
     }
