@@ -41,13 +41,14 @@
             }
         },
         mounted () {
-            this.items = [
-                { text: 'Primer recordatorio', done: true },
+            axios.get('api/todos').then(response => {this.items = response.data});
+            /*this.items = [
+                { text: 'Primerisimo recordatorio', done: true },
                 { text: 'Segundo recordatorio', done: false },
                 { text: 'Tercero recordatorio', done: false },
                 { text: 'Cuarto recordatorio', done: true },
                 { text: 'Quinto recordatorio', done: false },
-            ]
+            ]*/
         },
         methods: {
             addTodo () {
