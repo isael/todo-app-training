@@ -29809,7 +29809,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 axios.post('api/todos', {
                     text: this.todoItemText
                 }).then(function (response) {
-                    _this2.items.unshift({ text: text, done: false }); //agregamos al principio de la lista
+                    //agregamos al principio de la lista en la vista                    
+                    _this2.items.unshift({ text: text, done: false });
                     _this2.todoItemText = '';
                 }).catch(function (error) {
                     alert(error.response.data);
@@ -29817,8 +29818,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         removeTodo: function removeTodo(todo) {
-            this.items = this.items.filter(function (item) {
-                return item !== todo;
+            var _this3 = this;
+
+            //removemos de la base
+            axios.delete('api/todos/' + todo.id).then(function (response) {
+                _this3.items = _this3.items.filter(function (item) {
+                    return item !== todo;
+                });
+            }).catch(function (error) {
+                alert(error.response.data);
             });
         },
         toggleDone: function toggleDone(todo) {
@@ -29929,6 +29937,7 @@ var render = function() {
                 staticClass: "button is-danger is-small",
                 on: {
                   click: function($event) {
+                    $event.preventDefault()
                     _vm.removeTodo(todo)
                   }
                 }

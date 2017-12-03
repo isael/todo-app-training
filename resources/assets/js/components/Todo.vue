@@ -20,7 +20,7 @@
                     {{ todo.text }}
                 </td>
                 <td class="is-narrow">
-                    <a class="button is-danger is-small" @click="removeTodo(todo)">Eliminar</a>
+                    <a class="button is-danger is-small" @click.prevent="removeTodo(todo)">Eliminar</a>
                 </td>
             </tr>
         </table>
@@ -65,7 +65,12 @@
                 }
             },
             removeTodo (todo) {
-                this.items = this.items.filter(item => item !== todo)
+                //removemos de la base
+                axios.delete('api/todos/'+todo.id).then(response => {
+                    this.items = this.items.filter(item => item !== todo)
+                }).catch(error => {
+                    alert(error.response.data)
+                });
             },
             toggleDone (todo) {
                 todo.done = !todo.done
