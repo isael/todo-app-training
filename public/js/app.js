@@ -29830,7 +29830,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         toggleDone: function toggleDone(todo) {
-            todo.done = !todo.done;
+            //actualizamos en la base el estado de hecho o 'done'
+            axios.put('api/todos/' + todo.id, todo).then(function (response) {
+                //El request es vacio ya que es suficiente con el id para hacer la actualizacion.
+                todo.done = !todo.done;
+            }).catch(function (error) {
+                alert(error.response.data);
+            });
         }
     }
 });

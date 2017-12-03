@@ -61,6 +61,13 @@ class TodoController extends Controller
     public function update($id, Request $request)
     {
         // TODO
+        $this->validate($request,[
+            'id' => 'required'
+        ]);
+        $todo = Todo::find($id);
+        $todo->done = 1;
+        $todo->save();
+        return $todo;
     }
 
     /**
