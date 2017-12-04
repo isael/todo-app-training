@@ -30892,7 +30892,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: {
+	props: { //Al ser locales estas propiedades las dejo en el TodoItem.vue y no en el store
 		text: {
 			type: String,
 			required: true
@@ -30915,17 +30915,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$store.dispatch('toogleDone', id);
 		}
 	}
-	/*computed: {
- 	text(){
- 		return this.$store.state.text;
- 	},
- 	id(){
- 		return this.$store.state.id;
- 	},
- 	done(){
- 		return this.$store.state.done;
- 	},
- }*/
 });
 
 /***/ }),
