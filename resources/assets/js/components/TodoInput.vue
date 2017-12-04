@@ -25,10 +25,10 @@
         },
         methods: {  //Se ejecutan los metodos en los mutations del store
             changeText(event){  
-                this.$store.commit('changeText');
+                this.$store.dispatch('changeText');
             },
             addTodo () {
-                this.$store.commit('addTodo');
+                this.$store.dispatch('addTodo');
             },
         }
     }

@@ -29336,54 +29336,74 @@ module.exports = function spread(callback) {
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-    state: {
-        todoItemText: '',
-        items: []
-    },
-    getters: {},
-    mutations: {
-        addTodo: function addTodo(state) {
-            var text = state.todoItemText.trim();
-            if (text !== '') {
-                //guarda en base
-                axios.post('api/todos', {
-                    text: state.todoItemText
-                }).then(function (response) {
-                    //agregamos al principio de la lista en la vista 
-                    state.items.unshift({ text: text, done: false, id: response.data.id });
-                    state.todoItemText = '';
-                }).catch(function (error) {
-                    console.log(error.response.data);
-                });
-            }
-        },
-        changeText: function changeText(state, event) {
-            state.todoItemText = event.target.value;
-        },
-        removeTodo: function removeTodo(state, id) {
-            //removemos de la base por medio del id
-            axios.delete('api/todos/' + id).then(function (response) {
-                state.items = state.items.filter(function (item) {
-                    return item.id !== id;
-                }); //Se compara con el id
-            }).catch(function (error) {
-                console.log("Error al borrar: " + error.response.data);
-            });
-        },
-        toogleDone: function toogleDone(state, id) {
-            var todos = state.items.filter(function (item) {
-                return item.id === id;
-            });
-            var todo = todos[0];
-            //actualizamos en la base el estado de hecho o 'done'
-            axios.put('api/todos/' + id, todo).then(function (response) {
-                //En el request es mejor enviar algo para verificar si hay datos .
-                todo.done = !todo.done;
-            }).catch(function (error) {
-                console.log("Error al actualizar: " + error.response.data);
-            });
-        }
+  state: {
+    todoItemText: '',
+    items: []
+  },
+  getters: {
+    getTodos: function getTodos(state) {
+      return axios.get('api/todos').then(function (response) {
+        return response.data;
+      });
     }
+  },
+  mutations: {
+    addTodo: function addTodo(state) {
+      var text = state.todoItemText.trim();
+      if (text !== '') {
+        //guarda en base
+        axios.post('api/todos', {
+          text: state.todoItemText
+        }).then(function (response) {
+          //agregamos al principio de la lista en la vista 
+          state.items.unshift({ text: text, done: false, id: response.data.id });
+          state.todoItemText = '';
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
+      }
+    },
+    changeText: function changeText(state, event) {
+      state.todoItemText = event.target.value;
+    },
+    removeTodo: function removeTodo(state, id) {
+      //removemos de la base por medio del id
+      axios.delete('api/todos/' + id).then(function (response) {
+        state.items = state.items.filter(function (item) {
+          return item.id !== id;
+        }); //Se compara con el id
+      }).catch(function (error) {
+        console.log("Error al borrar: " + error.response.data);
+      });
+    },
+    toogleDone: function toogleDone(state, id) {
+      var todos = state.items.filter(function (item) {
+        return item.id === id;
+      });
+      var todo = todos[0];
+      //actualizamos en la base el estado de hecho o 'done'
+      axios.put('api/todos/' + id, todo).then(function (response) {
+        //En el request es mejor enviar algo para verificar si hay datos .
+        todo.done = !todo.done;
+      }).catch(function (error) {
+        console.log("Error al actualizar: " + error.response.data);
+      });
+    }
+  },
+  actions: {
+    addTodo: function addTodo(context) {
+      context.commit('addTodo');
+    },
+    changeText: function changeText(context, event) {
+      context.commit('changeText', event);
+    },
+    removeTodo: function removeTodo(context, id) {
+      context.commit('removeTodo', id);
+    },
+    toogleDone: function toogleDone(context, id) {
+      context.commit('toogleDone', id);
+    }
+  }
 });
 
 /***/ }),
@@ -30782,14 +30802,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/**
- * Tips:
- * - En mounted pueden obtener el listado del backend de todos y dentro de la promesa de axios asirnarlo
- *   al arreglo que debe tener una estructura similar a los datos de ejemplo.
- * - En addTodo, removeTodo y toggleTodo deben hacer los cambios pertinentes para que las modificaciones,
- *   addiciones o elimicaiones tomen efecto en el backend asi como la base de datos.
- */
-
+//Importamos los vue hijos
 
 
 
@@ -30803,7 +30816,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('api/todos').then(function (response) {
             _this.$store.state.items = response.data;
         });
-        //this.items = store.getters.getTodos,
+        //this.$store.state.items = this.$store.getters.getTodos
     }
 });
 
@@ -30889,10 +30902,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	methods: {
 		//Redirigen a los mutations del store
 		removeTodo: function removeTodo(id) {
-			this.$store.commit('removeTodo', id);
+			this.$store.dispatch('removeTodo', id);
 		},
 		toogleDone: function toogleDone(id) {
-			this.$store.commit('toogleDone', id);
+			this.$store.dispatch('toogleDone', id);
 		}
 	}
 	/*computed: {
@@ -31039,10 +31052,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         //Se ejecutan los metodos en los mutations del store
         changeText: function changeText(event) {
-            this.$store.commit('changeText');
+            this.$store.dispatch('changeText');
         },
         addTodo: function addTodo() {
-            this.$store.commit('addTodo');
+            this.$store.dispatch('addTodo');
         }
     }
 });

@@ -27,10 +27,10 @@
 		},
 		methods: {	//Redirigen a los mutations del store
 			removeTodo (id) {
-                this.$store.commit('removeTodo',id);
+                this.$store.dispatch('removeTodo',id);
             },
             toogleDone (id) {
-                this.$store.commit('toogleDone',id);
+                this.$store.dispatch('toogleDone',id);
             }
 		},
 		/*computed: {

@@ -8,19 +8,12 @@
                <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text"/>
             </tr>
         </table>
-        
+
     </div>
 </template>
 
 <script>
-    /**
-     * Tips:
-     * - En mounted pueden obtener el listado del backend de todos y dentro de la promesa de axios asirnarlo
-     *   al arreglo que debe tener una estructura similar a los datos de ejemplo.
-     * - En addTodo, removeTodo y toggleTodo deben hacer los cambios pertinentes para que las modificaciones,
-     *   addiciones o elimicaiones tomen efecto en el backend asi como la base de datos.
-     */
-
+    //Importamos los vue hijos
     import TodoItem from './TodoItem.vue';
     import TodoInput from './TodoInput.vue';
 
@@ -32,7 +25,7 @@
             axios.get('api/todos').then(response => {
                 this.$store.state.items = response.data
             });
-            //this.items = store.getters.getTodos,
+            //this.$store.state.items = this.$store.getters.getTodos
         }
     }
 </script>

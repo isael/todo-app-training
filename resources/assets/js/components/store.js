@@ -9,7 +9,11 @@ export const store = new Vuex.Store({
     items: [],
   },
   getters: {
-
+    getTodos(state){
+      return axios.get('api/todos').then(response => {
+          return response.data
+      });
+    },
   },
   mutations: { 
     addTodo (state) {
@@ -49,6 +53,20 @@ export const store = new Vuex.Store({
       }).catch(error => {
           console.log("Error al actualizar: "+error.response.data)
       });
+    },
+  },
+  actions: {
+    addTodo (context) {
+      context.commit('addTodo')
+    },
+    changeText(context,event){
+      context.commit('changeText',event)
+    },
+    removeTodo(context,id){
+      context.commit('removeTodo',id)
+    },
+    toogleDone(context,id){
+      context.commit('toogleDone',id)
     },
   }
 })
