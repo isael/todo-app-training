@@ -60,12 +60,16 @@ class TodoController extends Controller
      */
     public function update($id, Request $request)
     {
-        // TODO
+        // Verificamos que este el id
         $this->validate($request,[
             'id' => 'required'
         ]);
         $todo = Todo::find($id);
-        $todo->done = 1;
+        //En caso de estar 'done' lo cambia y viceversa.
+        if($todo->done == 0)
+            $todo->done = 1;
+        else
+            $todo->done = 0;
         $todo->save();
         return $todo;
     }
