@@ -20,12 +20,12 @@
         //Cambiamos los props por acceso directo al store
         computed: {
             todoItemText(){
-                return this.$store.state.todoItemText;
+                return this.$store.getters.getTodoItemText;
             }
         },
         methods: {  //Se ejecutan los metodos en los mutations del store
             changeText(event){  
-                this.$store.dispatch('changeText');
+                this.$store.dispatch('changeText',event);
             },
             addTodo () {
                 this.$store.dispatch('addTodo');

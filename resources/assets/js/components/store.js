@@ -9,13 +9,19 @@ export const store = new Vuex.Store({
     items: [],
   },
   getters: {
-    getTodos(state){
-      return axios.get('api/todos').then(response => {
-          return response.data
-      });
+    getItems(state) {
+      return state.items
     },
+    getTodoItemText(state){
+      return state.todoItemText
+    }
   },
   mutations: { 
+    cargaItems(state){
+      axios.get('api/todos').then(response => {
+          state.items = response.data
+      });
+    },
     addTodo (state) {
       let text = state.todoItemText.trim()
       if (text !== '') {

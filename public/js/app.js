@@ -29341,13 +29341,19 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     items: []
   },
   getters: {
-    getTodos: function getTodos(state) {
-      return axios.get('api/todos').then(function (response) {
-        return response.data;
-      });
+    getItems: function getItems(state) {
+      return state.items;
+    },
+    getTodoItemText: function getTodoItemText(state) {
+      return state.todoItemText;
     }
   },
   mutations: {
+    cargaItems: function cargaItems(state) {
+      axios.get('api/todos').then(function (response) {
+        state.items = response.data;
+      });
+    },
     addTodo: function addTodo(state) {
       var text = state.todoItemText.trim();
       if (text !== '') {
@@ -30807,16 +30813,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    computed: {
+        items: function items() {
+            return this.$store.getters.getItems;
+        }
+    },
     components: {
         TodoInput: __WEBPACK_IMPORTED_MODULE_1__TodoInput_vue___default.a, TodoItem: __WEBPACK_IMPORTED_MODULE_0__TodoItem_vue___default.a
     },
     mounted: function mounted() {
-        var _this = this;
-
-        axios.get('api/todos').then(function (response) {
-            _this.$store.state.items = response.data;
-        });
-        //this.$store.state.items = this.$store.getters.getTodos
+        //Se ejecuta la actualizacion de la lista de Items en un mutation
+        this.$store.commit('cargaItems');
     }
 });
 
@@ -31046,13 +31053,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     //Cambiamos los props por acceso directo al store
     computed: {
         todoItemText: function todoItemText() {
-            return this.$store.state.todoItemText;
+            return this.$store.getters.getTodoItemText;
         }
     },
     methods: {
         //Se ejecutan los metodos en los mutations del store
         changeText: function changeText(event) {
-            this.$store.dispatch('changeText');
+            this.$store.dispatch('changeText', event);
         },
         addTodo: function addTodo() {
             this.$store.dispatch('addTodo');
@@ -31131,7 +31138,7 @@ var render = function() {
         _c(
           "tr",
           { staticClass: "is-fullwidth" },
-          _vm._l(this.$store.state.items, function(todo, index) {
+          _vm._l(_vm.items, function(todo, index) {
             return _c("TodoItem", {
               key: index,
               attrs: { id: todo.id, done: todo.done, text: todo.text }

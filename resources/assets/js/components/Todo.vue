@@ -5,7 +5,7 @@
 
         <table class="table is-bordered is-fullwidth">
             <tr class="is-fullwidth">
-               <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text"/>
+               <TodoItem  v-for="(todo, index) in items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text"/>
             </tr>
         </table>
 
@@ -18,14 +18,16 @@
     import TodoInput from './TodoInput.vue';
 
     export default {
+        computed: {
+            items(){
+                return this.$store.getters.getItems;
+            }
+        },
         components:{
             TodoInput, TodoItem
         },
-        mounted () {
-            axios.get('api/todos').then(response => {
-                this.$store.state.items = response.data
-            });
-            //this.$store.state.items = this.$store.getters.getTodos
+        mounted () {    //Se ejecuta la actualizacion de la lista de Items en un mutation
+            this.$store.commit('cargaItems')
         }
     }
 </script>
