@@ -1,19 +1,7 @@
 <template>
     <div class="container">
-        <form method= "POST" v-on:submit.prevent="addTodo">
-            <div class="box">
-                <div class="field is-grouped">
-                    <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="Nuevo recordatorio" v-model="todoItemText">
-                    </p>
-                    <p class="control">
-                        <a class="button is-info" @click.prevent="addTodo">
-                            Agregar
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </form>
+        <TodoInput :todoItemText="todoItemText" @changeText="todoItemText = $event" @addTodo="addTodo"/>
+
         <table class="table is-bordered is-fullwidth">
             <tr class="is-fullwidth">
                <TodoItem  v-for="(todo, index) in items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text" @toggleDone="toggleDone" @removeTodo="removeTodo"/>
@@ -32,10 +20,11 @@
      */
 
     import TodoItem from './TodoItem.vue';
+    import TodoInput from './TodoInput.vue';
 
     export default {
         components:{
-            TodoItem
+            TodoInput, TodoItem
         },
         data () {
             return {
@@ -61,7 +50,7 @@
                         this.items.unshift({ text: text, done: false });
                         this.todoItemText = '';
                     }).catch(error => {
-                        alert(error.response.data)
+                        console.log(error.response.data)
                     });
                 }
             },

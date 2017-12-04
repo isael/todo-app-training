@@ -60,11 +60,12 @@ class TodoController extends Controller
      */
     public function update($id, Request $request)
     {
-        // TODO
+        // Verificamos que este el id
         $this->validate($request,[
             'id' => 'required'
         ]);
         $todo = Todo::find($id);
+        //En caso de estar 'done' lo cambia y viceversa.
         if($todo->done == 0)
             $todo->done = 1;
         else
@@ -82,7 +83,7 @@ class TodoController extends Controller
      */
     public function delete($id)
     {
-        // TODO
+        //respuesta en estructura json que sera la respuesta
         $response = "";
         try{
             $todo = Todo::FindOrFail($id);
