@@ -29823,19 +29823,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         removeTodo: function removeTodo(id) {
             var _this3 = this;
 
-            //removemos de la base
+            //removemos de la base por medio del id
             axios.delete('api/todos/' + id).then(function (response) {
                 _this3.items = _this3.items.filter(function (item) {
                     return item.id !== id;
-                });
+                }); //Se compara con el id
             }).catch(function (error) {
                 alert(error.response.data);
             });
         },
-        toggleDone: function toggleDone(todo) {
+        toggleDone: function toggleDone(id) {
+            var todos = this.items.filter(function (item) {
+                return item.id === id;
+            });
+            var todo = todos[0];
             //actualizamos en la base el estado de hecho o 'done'
-            axios.put('api/todos/' + todo.id, todo).then(function (response) {
-                //El request es vacio ya que es suficiente con el id para hacer la actualizacion.
+            axios.put('api/todos/' + id, todo).then(function (response) {
+                //En el request es mejor enviar algo para verificar si hay datos .
                 todo.done = !todo.done;
             }).catch(function (error) {
                 alert(error.response.data);

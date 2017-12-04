@@ -65,7 +65,10 @@ class TodoController extends Controller
             'id' => 'required'
         ]);
         $todo = Todo::find($id);
-        $todo->done = 1;
+        if($todo->done == 0)
+            $todo->done = 1;
+        else
+            $todo->done = 0;
         $todo->save();
         return $todo;
     }

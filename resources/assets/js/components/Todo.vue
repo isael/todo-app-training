@@ -73,9 +73,13 @@
                     alert(error.response.data)
                 });
             },
-            toggleDone (todo) {
-                //actualizamos en la base el estado de hecho o 'done'
-                axios.put('api/todos/'+todo.id,todo).then(response =>{    //El request es vacio ya que es suficiente con el id para hacer la actualizacion.
+            toggleDone (id) {
+            let todos = this.items.filter(function (item) {
+                return item.id === id;
+            });
+            let todo = todos[0];
+            //actualizamos en la base el estado de hecho o 'done'
+            axios.put('api/todos/' + id, todo).then(response =>{    //En el request es mejor enviar algo para verificar si hay datos .
                     todo.done = !todo.done
                 }).catch(error => {
                     alert(error.response.data)
