@@ -28,19 +28,7 @@
                 this.$store.state.todoItemText = event.target.value;
             },
             addTodo () {
-                let text = this.$store.state.todoItemText.trim()
-                if (text !== '') {
-                    //guarda en base
-                    axios.post('api/todos',{
-                        text: this.$store.state.todoItemText
-                    }).then(response => {    
-                        //agregamos al principio de la lista en la vista 
-                        this.$store.state.items.unshift({ text: text, done: false, id: response.data.id });
-                        this.$store.state.todoItemText = '';
-                    }).catch(error => {
-                        console.log(error.response.data)
-                    });
-                }
+                this.$store.commit('addTodo');
             },
         }
     }
