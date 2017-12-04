@@ -1,10 +1,9 @@
 <template>
     <div class="container">
-        <TodoInput @addTodo="addTodo"/>
-        <h1>{{ this.$store.state.todoItemText }}</h1>
+        <TodoInput/>
         <table class="table is-bordered is-fullwidth">
             <tr class="is-fullwidth">
-               <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text" @toggleDone="toggleDone" @removeTodo="removeTodo"/>
+               <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text"/>
             </tr>
         </table>
     </div>
@@ -33,7 +32,7 @@
             //this.items = store.getters.getTodos,
         },
         methods: {
-            addTodo () {
+            /*addTodo () {
                 let text = this.$store.state.todoItemText.trim()
                 if (text !== '') {
                     //guarda en base
@@ -67,7 +66,7 @@
                 }).catch(error => {
                     console.log("Error al actualizar: "+error.response.data)
                 });
-            }
+            }*/
         }
     }
 </script>

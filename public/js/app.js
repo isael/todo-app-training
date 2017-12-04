@@ -30734,7 +30734,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /**
  * Tips:
@@ -30761,48 +30760,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        addTodo: function addTodo() {
-            var _this2 = this;
-
-            var text = this.$store.state.todoItemText.trim();
+        /*addTodo () {
+            let text = this.$store.state.todoItemText.trim()
             if (text !== '') {
                 //guarda en base
-                axios.post('api/todos', {
+                axios.post('api/todos',{
                     text: this.$store.state.todoItemText
-                }).then(function (response) {
+                }).then(response => {    
                     //agregamos al principio de la lista en la vista 
-                    _this2.$store.state.items.unshift({ text: text, done: false, id: response.data.id });
-                    _this2.$store.state.todoItemText = '';
-                }).catch(function (error) {
-                    console.log(error.response.data);
+                    this.$store.state.items.unshift({ text: text, done: false, id: response.data.id });
+                    this.$store.state.todoItemText = '';
+                }).catch(error => {
+                    console.log(error.response.data)
                 });
             }
         },
-        removeTodo: function removeTodo(id) {
-            var _this3 = this;
-
+        removeTodo (id) {
             //removemos de la base por medio del id
-            axios.delete('api/todos/' + id).then(function (response) {
-                _this3.$store.state.items = _this3.$store.state.items.filter(function (item) {
-                    return item.id !== id;
-                }); //Se compara con el id
-            }).catch(function (error) {
-                console.log("Error al borrar: " + error.response.data);
+            axios.delete('api/todos/'+id).then(response => {
+                this.$store.state.items = this.$store.state.items.filter(item => item.id !== id)  //Se compara con el id
+            }).catch(error => {
+                console.log("Error al borrar: "+error.response.data)
             });
         },
-        toggleDone: function toggleDone(id) {
-            var todos = this.$store.state.items.filter(function (item) {
+        toggleDone (id) {
+            let todos = this.$store.state.items.filter(function (item) {
                 return item.id === id;
             });
-            var todo = todos[0];
+            let todo = todos[0];
             //actualizamos en la base el estado de hecho o 'done'
-            axios.put('api/todos/' + id, todo).then(function (response) {
-                //En el request es mejor enviar algo para verificar si hay datos .
-                todo.done = !todo.done;
-            }).catch(function (error) {
-                console.log("Error al actualizar: " + error.response.data);
+            axios.put('api/todos/' + id, todo).then(response =>{    //En el request es mejor enviar algo para verificar si hay datos .
+                todo.done = !todo.done
+            }).catch(error => {
+                console.log("Error al actualizar: "+error.response.data)
             });
-        }
+        }*/
     }
 });
 
@@ -30884,7 +30876,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			type: Boolean,
 			required: true
 		}
+	},
+	methods: {
+		removeTodo: function removeTodo(id) {
+			var _this = this;
+
+			//removemos de la base por medio del id
+			axios.delete('api/todos/' + id).then(function (response) {
+				_this.$store.state.items = _this.$store.state.items.filter(function (item) {
+					return item.id !== id;
+				}); //Se compara con el id
+			}).catch(function (error) {
+				console.log("Error al borrar: " + error.response.data);
+			});
+		},
+		toggleDone: function toggleDone(id) {
+			var todos = this.$store.state.items.filter(function (item) {
+				return item.id === id;
+			});
+			var todo = todos[0];
+			//actualizamos en la base el estado de hecho o 'done'
+			axios.put('api/todos/' + id, todo).then(function (response) {
+				//En el request es mejor enviar algo para verificar si hay datos .
+				todo.done = !todo.done;
+			}).catch(function (error) {
+				console.log("Error al actualizar: " + error.response.data);
+			});
+		}
 	}
+	/*computed: {
+ 	text(){
+ 		return this.$store.state.text;
+ 	},
+ 	id(){
+ 		return this.$store.state.id;
+ 	},
+ 	done(){
+ 		return this.$store.state.done;
+ 	},
+ }*/
 });
 
 /***/ }),
@@ -30904,7 +30934,7 @@ var render = function() {
         staticStyle: { cursor: "pointer" },
         on: {
           click: function($event) {
-            _vm.$emit("toggleDone", _vm.id)
+            _vm.toggleDone(_vm.id)
           }
         }
       },
@@ -30919,7 +30949,7 @@ var render = function() {
           on: {
             click: function($event) {
               $event.preventDefault()
-              _vm.$emit("removeTodo", _vm.id)
+              _vm.removeTodo(_vm.id)
             }
           }
         },
@@ -31009,26 +31039,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    //props:['todoItemText'], //Propiedad que será modificada desde el vue Todo
     //Cambiamos los props por acceso directo al store
     computed: {
         todoItemText: function todoItemText() {
             return this.$store.state.todoItemText;
         }
     },
-    data: function data() {
-        return {
-            todoItemInputText: ''
-        };
-    },
-
     methods: {
         changeText: function changeText(event) {
-            /*
-            this.todoItemInputText = event.target.value;    //Detecta los cambios de Todo y actualiza
-            this.$emit('changeText',this.todoItemInputText) //Actualiza todoItemText del Todo
-            */
+            //Se actualiza directo en la variable del store
             this.$store.state.todoItemText = event.target.value;
+        },
+        addTodo: function addTodo() {
+            var _this = this;
+
+            var text = this.$store.state.todoItemText.trim();
+            if (text !== '') {
+                //guarda en base
+                axios.post('api/todos', {
+                    text: this.$store.state.todoItemText
+                }).then(function (response) {
+                    //agregamos al principio de la lista en la vista 
+                    _this.$store.state.items.unshift({ text: text, done: false, id: response.data.id });
+                    _this.$store.state.todoItemText = '';
+                }).catch(function (error) {
+                    console.log(error.response.data);
+                });
+            }
         }
     }
 });
@@ -31048,7 +31085,7 @@ var render = function() {
       on: {
         submit: function($event) {
           $event.preventDefault()
-          _vm.$emit("addTodo")
+          _vm.addTodo($event)
         }
       }
     },
@@ -31067,14 +31104,7 @@ var render = function() {
           _c("p", { staticClass: "control" }, [
             _c(
               "a",
-              {
-                staticClass: "button is-info",
-                on: {
-                  click: function($event) {
-                    _vm.$emit("addTodo")
-                  }
-                }
-              },
+              { staticClass: "button is-info", on: { click: _vm.addTodo } },
               [_vm._v("\n                    Agregar\n                ")]
             )
           ])
@@ -31105,9 +31135,7 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
-      _c("TodoInput", { on: { addTodo: _vm.addTodo } }),
-      _vm._v(" "),
-      _c("h1", [_vm._v(_vm._s(this.$store.state.todoItemText))]),
+      _c("TodoInput"),
       _vm._v(" "),
       _c("table", { staticClass: "table is-bordered is-fullwidth" }, [
         _c(
@@ -31116,8 +31144,7 @@ var render = function() {
           _vm._l(this.$store.state.items, function(todo, index) {
             return _c("TodoItem", {
               key: index,
-              attrs: { id: todo.id, done: todo.done, text: todo.text },
-              on: { toggleDone: _vm.toggleDone, removeTodo: _vm.removeTodo }
+              attrs: { id: todo.id, done: todo.done, text: todo.text }
             })
           })
         )
