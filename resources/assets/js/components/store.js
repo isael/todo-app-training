@@ -37,6 +37,18 @@ export const store = new Vuex.Store({
       }).catch(error => {
           console.log("Error al borrar: "+error.response.data)
       });
-    }
+    },
+    toogleDone (state,id){
+      let todos = state.items.filter(function (item) {
+          return item.id === id;
+      });
+      let todo = todos[0];
+      //actualizamos en la base el estado de hecho o 'done'
+      axios.put('api/todos/' + id, todo).then(response =>{    //En el request es mejor enviar algo para verificar si hay datos .
+          todo.done = !todo.done
+      }).catch(error => {
+          console.log("Error al actualizar: "+error.response.data)
+      });
+    },
   }
 })

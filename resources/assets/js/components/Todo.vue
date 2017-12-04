@@ -1,11 +1,14 @@
 <template>
     <div class="container">
+
         <TodoInput/>
+
         <table class="table is-bordered is-fullwidth">
             <tr class="is-fullwidth">
                <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text"/>
             </tr>
         </table>
+        
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<td class="is-fullwidth" style="cursor: pointer" :class="{ 'is-done': done }" @click="toggleDone(id)">
+		<td class="is-fullwidth" style="cursor: pointer" :class="{ 'is-done': done }" @click="toogleDone(id)">
 	        {{ text }}
 	    </td>
 	    <td class="is-narrow">
@@ -25,23 +25,14 @@
 				required: true,
 			}
 		},
-		methods: {
+		methods: {	//Redirigen a los mutations del store
 			removeTodo (id) {
                 this.$store.commit('removeTodo',id);
             },
-            toggleDone (id) {
-                let todos = this.$store.state.items.filter(function (item) {
-                    return item.id === id;
-                });
-                let todo = todos[0];
-                //actualizamos en la base el estado de hecho o 'done'
-                axios.put('api/todos/' + id, todo).then(response =>{    //En el request es mejor enviar algo para verificar si hay datos .
-                    todo.done = !todo.done
-                }).catch(error => {
-                    console.log("Error al actualizar: "+error.response.data)
-                });
+            toogleDone (id) {
+                this.$store.commit('toogleDone',id);
             }
-		}
+		},
 		/*computed: {
 			text(){
 				return this.$store.state.text;

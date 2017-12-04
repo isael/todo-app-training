@@ -29336,41 +29336,54 @@ module.exports = function spread(callback) {
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-  state: {
-    todoItemText: '',
-    items: []
-  },
-  getters: {},
-  mutations: {
-    addTodo: function addTodo(state) {
-      var text = state.todoItemText.trim();
-      if (text !== '') {
-        //guarda en base
-        axios.post('api/todos', {
-          text: state.todoItemText
-        }).then(function (response) {
-          //agregamos al principio de la lista en la vista 
-          state.items.unshift({ text: text, done: false, id: response.data.id });
-          state.todoItemText = '';
-        }).catch(function (error) {
-          console.log(error.response.data);
-        });
-      }
+    state: {
+        todoItemText: '',
+        items: []
     },
-    changeText: function changeText(state, event) {
-      state.todoItemText = event.target.value;
-    },
-    removeTodo: function removeTodo(state, id) {
-      //removemos de la base por medio del id
-      axios.delete('api/todos/' + id).then(function (response) {
-        state.items = state.items.filter(function (item) {
-          return item.id !== id;
-        }); //Se compara con el id
-      }).catch(function (error) {
-        console.log("Error al borrar: " + error.response.data);
-      });
+    getters: {},
+    mutations: {
+        addTodo: function addTodo(state) {
+            var text = state.todoItemText.trim();
+            if (text !== '') {
+                //guarda en base
+                axios.post('api/todos', {
+                    text: state.todoItemText
+                }).then(function (response) {
+                    //agregamos al principio de la lista en la vista 
+                    state.items.unshift({ text: text, done: false, id: response.data.id });
+                    state.todoItemText = '';
+                }).catch(function (error) {
+                    console.log(error.response.data);
+                });
+            }
+        },
+        changeText: function changeText(state, event) {
+            state.todoItemText = event.target.value;
+        },
+        removeTodo: function removeTodo(state, id) {
+            //removemos de la base por medio del id
+            axios.delete('api/todos/' + id).then(function (response) {
+                state.items = state.items.filter(function (item) {
+                    return item.id !== id;
+                }); //Se compara con el id
+            }).catch(function (error) {
+                console.log("Error al borrar: " + error.response.data);
+            });
+        },
+        toogleDone: function toogleDone(state, id) {
+            var todos = state.items.filter(function (item) {
+                return item.id === id;
+            });
+            var todo = todos[0];
+            //actualizamos en la base el estado de hecho o 'done'
+            axios.put('api/todos/' + id, todo).then(function (response) {
+                //En el request es mejor enviar algo para verificar si hay datos .
+                todo.done = !todo.done;
+            }).catch(function (error) {
+                console.log("Error al actualizar: " + error.response.data);
+            });
+        }
     }
-  }
 });
 
 /***/ }),
@@ -30765,6 +30778,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /**
  * Tips:
@@ -30871,21 +30887,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	methods: {
+		//Redirigen a los mutations del store
 		removeTodo: function removeTodo(id) {
 			this.$store.commit('removeTodo', id);
 		},
-		toggleDone: function toggleDone(id) {
-			var todos = this.$store.state.items.filter(function (item) {
-				return item.id === id;
-			});
-			var todo = todos[0];
-			//actualizamos en la base el estado de hecho o 'done'
-			axios.put('api/todos/' + id, todo).then(function (response) {
-				//En el request es mejor enviar algo para verificar si hay datos .
-				todo.done = !todo.done;
-			}).catch(function (error) {
-				console.log("Error al actualizar: " + error.response.data);
-			});
+		toogleDone: function toogleDone(id) {
+			this.$store.commit('toogleDone', id);
 		}
 	}
 	/*computed: {
@@ -30918,7 +30925,7 @@ var render = function() {
         staticStyle: { cursor: "pointer" },
         on: {
           click: function($event) {
-            _vm.toggleDone(_vm.id)
+            _vm.toogleDone(_vm.id)
           }
         }
       },
