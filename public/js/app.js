@@ -29336,28 +29336,41 @@ module.exports = function spread(callback) {
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-    state: {
-        todoItemText: '',
-        items: []
+  state: {
+    todoItemText: '',
+    items: []
+  },
+  getters: {},
+  mutations: {
+    addTodo: function addTodo(state) {
+      var text = state.todoItemText.trim();
+      if (text !== '') {
+        //guarda en base
+        axios.post('api/todos', {
+          text: state.todoItemText
+        }).then(function (response) {
+          //agregamos al principio de la lista en la vista 
+          state.items.unshift({ text: text, done: false, id: response.data.id });
+          state.todoItemText = '';
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
+      }
     },
-    getters: {},
-    mutations: {
-        addTodo: function addTodo(state) {
-            var text = state.todoItemText.trim();
-            if (text !== '') {
-                //guarda en base
-                axios.post('api/todos', {
-                    text: state.todoItemText
-                }).then(function (response) {
-                    //agregamos al principio de la lista en la vista 
-                    state.items.unshift({ text: text, done: false, id: response.data.id });
-                    state.todoItemText = '';
-                }).catch(function (error) {
-                    console.log(error.response.data);
-                });
-            }
-        }
+    changeText: function changeText(state, event) {
+      state.todoItemText = event.target.value;
+    },
+    removeTodo: function removeTodo(state, id) {
+      //removemos de la base por medio del id
+      axios.delete('api/todos/' + id).then(function (response) {
+        state.items = state.items.filter(function (item) {
+          return item.id !== id;
+        }); //Se compara con el id
+      }).catch(function (error) {
+        console.log("Error al borrar: " + error.response.data);
+      });
     }
+  }
 });
 
 /***/ }),
@@ -30859,16 +30872,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	methods: {
 		removeTodo: function removeTodo(id) {
-			var _this = this;
-
-			//removemos de la base por medio del id
-			axios.delete('api/todos/' + id).then(function (response) {
-				_this.$store.state.items = _this.$store.state.items.filter(function (item) {
-					return item.id !== id;
-				}); //Se compara con el id
-			}).catch(function (error) {
-				console.log("Error al borrar: " + error.response.data);
-			});
+			this.$store.commit('removeTodo', id);
 		},
 		toggleDone: function toggleDone(id) {
 			var todos = this.$store.state.items.filter(function (item) {
@@ -31026,9 +31030,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        //Se ejecutan los metodos en los mutations del store
         changeText: function changeText(event) {
-            //Se actualiza directo en la variable del store
-            this.$store.state.todoItemText = event.target.value;
+            this.$store.commit('changeText');
         },
         addTodo: function addTodo() {
             this.$store.commit('addTodo');

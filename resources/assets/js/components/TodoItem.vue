@@ -27,12 +27,7 @@
 		},
 		methods: {
 			removeTodo (id) {
-                //removemos de la base por medio del id
-                axios.delete('api/todos/'+id).then(response => {
-                    this.$store.state.items = this.$store.state.items.filter(item => item.id !== id)  //Se compara con el id
-                }).catch(error => {
-                    console.log("Error al borrar: "+error.response.data)
-                });
+                this.$store.commit('removeTodo',id);
             },
             toggleDone (id) {
                 let todos = this.$store.state.items.filter(function (item) {

@@ -23,9 +23,9 @@
                 return this.$store.state.todoItemText;
             }
         },
-        methods: {
-            changeText(event){  //Se actualiza directo en la variable del store
-                this.$store.state.todoItemText = event.target.value;
+        methods: {  //Se ejecutan los metodos en los mutations del store
+            changeText(event){  
+                this.$store.commit('changeText');
             },
             addTodo () {
                 this.$store.commit('addTodo');
