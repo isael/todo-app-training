@@ -1,10 +1,10 @@
 <template>
     <div class="container">
-        <TodoInput :todoItemText="todoItemText" @changeText="todoItemText = $event" @addTodo="addTodo"/>
-
+        <TodoInput @addTodo="addTodo"/>
+        <h1>{{ this.$store.state.todoItemText }}</h1>
         <table class="table is-bordered is-fullwidth">
             <tr class="is-fullwidth">
-               <TodoItem  v-for="(todo, index) in items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text" @toggleDone="toggleDone" @removeTodo="removeTodo"/>
+               <TodoItem  v-for="(todo, index) in this.$store.state.items" :key="index" :id="todo.id" :done="todo.done" :text="todo.text" @toggleDone="toggleDone" @removeTodo="removeTodo"/>
             </tr>
         </table>
     </div>
@@ -26,29 +26,23 @@
         components:{
             TodoInput, TodoItem
         },
-        data () {
-            return {
-                todoItemText: '',
-                items: [],
-            }
-        },
         mounted () {
             axios.get('api/todos').then(response => {
-                this.items = response.data
+                this.$store.state.items = response.data
             });
-            //pendiente
+            //this.items = store.getters.getTodos,
         },
         methods: {
             addTodo () {
-                let text = this.todoItemText.trim()
+                let text = this.$store.state.todoItemText.trim()
                 if (text !== '') {
                     //guarda en base
                     axios.post('api/todos',{
-                        text: this.todoItemText
+                        text: this.$store.state.todoItemText
                     }).then(response => {    
                         //agregamos al principio de la lista en la vista 
-                        this.items.unshift({ text: text, done: false, id: response.data.id });
-                        this.todoItemText = '';
+                        this.$store.state.items.unshift({ text: text, done: false, id: response.data.id });
+                        this.$store.state.todoItemText = '';
                     }).catch(error => {
                         console.log(error.response.data)
                     });
@@ -57,13 +51,13 @@
             removeTodo (id) {
                 //removemos de la base por medio del id
                 axios.delete('api/todos/'+id).then(response => {
-                    this.items = this.items.filter(item => item.id !== id)  //Se compara con el id
+                    this.$store.state.items = this.$store.state.items.filter(item => item.id !== id)  //Se compara con el id
                 }).catch(error => {
                     console.log("Error al borrar: "+error.response.data)
                 });
             },
             toggleDone (id) {
-                let todos = this.items.filter(function (item) {
+                let todos = this.$store.state.items.filter(function (item) {
                     return item.id === id;
                 });
                 let todo = todos[0];

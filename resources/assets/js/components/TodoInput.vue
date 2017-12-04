@@ -17,16 +17,15 @@
 
 <script>
     export default {
-        props:['todoItemText'], //Propiedad que será modificada desde el vue Todo
-        data () {
-            return {
-                todoItemInputText: ''
+        //Cambiamos los props por acceso directo al store
+        computed: {
+            todoItemText(){
+                return this.$store.state.todoItemText;
             }
         },
         methods: {
-            changeText(event){
-                this.todoItemInputText = event.target.value;    //Detecta los cambios de Todo y actualiza
-                this.$emit('changeText',this.todoItemInputText) //Actualiza todoItemText del Todo
+            changeText(event){  //Se actualiza directo en la variable del store
+                this.$store.state.todoItemText = event.target.value;
             }
         }
     }
