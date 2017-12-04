@@ -29820,7 +29820,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return item.id !== id;
                 }); //Se compara con el id
             }).catch(function (error) {
-                alert(error.response.data);
+                console.log("Error al borrar: " + error.response.data);
             });
         },
         toggleDone: function toggleDone(id) {
@@ -29833,7 +29833,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 //En el request es mejor enviar algo para verificar si hay datos .
                 todo.done = !todo.done;
             }).catch(function (error) {
-                alert(error.response.data);
+                console.log("Error al actualizar: " + error.response.data);
             });
         }
     }
