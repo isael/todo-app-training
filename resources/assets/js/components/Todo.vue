@@ -46,8 +46,8 @@
                     axios.post('api/todos',{
                         text: this.todoItemText
                     }).then(response => {    
-                        //agregamos al principio de la lista en la vista                    
-                        this.items.unshift({ text: text, done: false });
+                        //agregamos al principio de la lista en la vista 
+                        this.items.unshift({ text: text, done: false, id: response.data.id });
                         this.todoItemText = '';
                     }).catch(error => {
                         console.log(error.response.data)

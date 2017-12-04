@@ -29803,8 +29803,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 axios.post('api/todos', {
                     text: this.todoItemText
                 }).then(function (response) {
-                    //agregamos al principio de la lista en la vista                    
-                    _this2.items.unshift({ text: text, done: false });
+                    //agregamos al principio de la lista en la vista 
+                    _this2.items.unshift({ text: text, done: false, id: response.data.id });
                     _this2.todoItemText = '';
                 }).catch(function (error) {
                     console.log(error.response.data);
